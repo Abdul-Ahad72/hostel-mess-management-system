@@ -1,0 +1,3537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#4f46e5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%234f46e5'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='white'>🏠</text></svg>">
+<title>Hostel Expense Tracker & Entertainment</title>
+
+<style>
+:root {
+  --bg: #0b0f19;
+  --bg-gradient: radial-gradient(1200px 600px at 85% -10%, rgba(99, 102, 241, 0.18), transparent 60%),
+                 radial-gradient(900px 500px at -10% 110%, rgba(6, 182, 212, 0.12), transparent 60%), #0b0f19;
+  --surface: rgba(17, 24, 39, 0.85);
+  --surface-card: #131b2e;
+  --surface-hover: #1c2742;
+  --surface-border: rgba(255, 255, 255, 0.08);
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --accent-gradient: linear-gradient(135deg, #6366f1, #4f46e5);
+  --accent-soft: rgba(99, 102, 241, 0.15);
+  --cyan: #38bdf8;
+  --green: #10b981;
+  --green-soft: rgba(16, 185, 129, 0.12);
+  --red: #ef4444;
+  --red-soft: rgba(239, 68, 68, 0.12);
+  --amber: #f59e0b;
+  --amber-soft: rgba(245, 158, 11, 0.12);
+  --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4);
+  --nav-bg: rgba(15, 23, 42, 0.94);
+  --input-bg: #1a2236;
+}
+
+[data-theme="light"] {
+  --bg: #f4f6fb;
+  --bg-gradient: radial-gradient(1200px 600px at 85% -10%, rgba(99, 102, 241, 0.12), transparent 60%),
+                 radial-gradient(900px 500px at -10% 110%, rgba(6, 182, 212, 0.08), transparent 60%), #f4f6fb;
+  --surface: rgba(255, 255, 255, 0.88);
+  --surface-card: #ffffff;
+  --surface-hover: #f1f5f9;
+  --surface-border: rgba(0, 0, 0, 0.08);
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-gradient: linear-gradient(135deg, #6366f1, #4f46e5);
+  --accent-soft: rgba(79, 70, 229, 0.1);
+  --green: #059669;
+  --green-soft: rgba(5, 150, 105, 0.1);
+  --red: #dc2626;
+  --red-soft: rgba(220, 38, 38, 0.1);
+  --amber: #d97706;
+  --amber-soft: rgba(217, 119, 6, 0.1);
+  --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+  --nav-bg: rgba(255, 255, 255, 0.94);
+  --input-bg: #f8fafc;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  padding-bottom: 84px;
+}
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: transform 0.12s ease, opacity 0.12s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.app {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px 14px 24px;
+}
+
+/* APP HEADER */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  margin-bottom: 16px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  position: sticky;
+  top: 12px;
+  z-index: 100;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: var(--accent-gradient);
+  color: #fff;
+  font-size: 22px;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  flex-shrink: 0;
+}
+
+h1 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+}
+
+.status-dot.offline {
+  background: var(--amber);
+  box-shadow: 0 0 8px var(--amber);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: var(--input-bg);
+  border: 1px solid var(--surface-border);
+  color: var(--text);
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+}
+
+.admin-pill {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--input-bg);
+  border: 1px solid var(--surface-border);
+  color: var(--text-muted);
+}
+
+.admin-pill.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.auth-header-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-gradient);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.user-profile-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 6px;
+  border-radius: 24px;
+  background: var(--input-bg);
+  border: 1px solid var(--surface-border);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.user-avatar-small {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* CYCLE / FILTER BAR */
+.cycle-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  padding: 10px 14px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.cycle-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.cycle-select {
+  background: var(--input-bg);
+  border: 1px solid var(--surface-border);
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  outline: none;
+}
+
+/* DESKTOP NAV TABS */
+.desktop-nav {
+  display: none;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 768px) {
+  .desktop-nav {
+    display: flex;
+  }
+  .bottom-nav {
+    display: none !important;
+  }
+  body {
+    padding-bottom: 24px;
+  }
+}
+
+.desktop-tab-btn {
+  flex: 1;
+  padding: 12px 10px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.desktop-tab-btn.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+}
+
+/* NATIVE MOBILE TAB BAR */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 68px;
+  background: var(--nav-bg);
+  border-top: 1px solid var(--surface-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 999;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 4px;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  flex: 1;
+  height: 100%;
+}
+
+.nav-item .icon {
+  font-size: 19px;
+}
+
+.nav-item.active {
+  color: var(--accent);
+}
+
+.nav-item.fab-item {
+  position: relative;
+}
+
+.nav-item.fab-item .fab-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.45);
+  margin-top: -14px;
+  border: 3px solid var(--surface-card);
+}
+
+/* TAB VIEWS */
+.tab-view {
+  display: none;
+}
+
+.tab-view.active {
+  display: block;
+  animation: fadeIn 0.18s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* CARDS */
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 16px;
+}
+
+.card h2 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent);
+}
+
+/* STATS BAR */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 600px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat-box {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stat-box small {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.stat-box b {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+/* ACTION BUTTONS */
+.quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 600px) {
+  .quick-actions {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+/* FORMS */
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.field {
+  flex: 1;
+}
+
+input, select, textarea {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--surface-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 15px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.quick-amount-pills {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.amount-pill {
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--input-bg);
+  border: 1px solid var(--surface-border);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.amount-pill:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+/* CHIPS FOR MEMBERS */
+.chips-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.chips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--input-bg);
+  border: 1px solid var(--surface-border);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.chip input {
+  display: none;
+}
+
+.chip.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.chip-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* SPLIT PREVIEW BOX */
+.split-preview {
+  background: var(--input-bg);
+  border: 1px dashed var(--surface-border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.split-preview b {
+  color: var(--text);
+}
+
+/* CUSTOM SPLIT INPUTS */
+.custom-split-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--input-bg);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  border: 1px solid var(--surface-border);
+}
+
+.custom-split-item input {
+  width: 110px;
+  padding: 8px 10px;
+  font-size: 14px;
+  text-align: right;
+}
+
+/* BUTTONS */
+.btn {
+  width: 100%;
+  border-radius: 14px;
+  padding: 13px 16px;
+  font-weight: 700;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn.primary {
+  background: var(--accent-gradient);
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35);
+}
+
+.btn.secondary {
+  background: var(--input-bg);
+  color: var(--text);
+  border: 1px solid var(--surface-border);
+}
+
+.btn.success {
+  background: var(--green);
+  color: #ffffff;
+}
+
+.btn.small-btn {
+  width: auto;
+  padding: 8px 14px;
+  font-size: 13px;
+  border-radius: 10px;
+}
+
+.link-btn {
+  background: transparent;
+  color: var(--accent);
+  padding: 4px 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* BALANCES LIST */
+.person-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--surface-border);
+  background: var(--input-bg);
+  border-radius: 14px;
+  margin-bottom: 8px;
+}
+
+.person-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.name { font-weight: 700; font-size: 15px; }
+.sub { font-size: 12px; color: var(--text-muted); }
+.balance { font-weight: 800; font-size: 15px; text-align: right; }
+.pos { color: var(--green); }
+.neg { color: var(--red); }
+.zero { color: var(--text-muted); }
+
+/* SETTLEMENT CARD */
+.settle-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background: var(--input-bg);
+  border: 1px solid var(--surface-border);
+  border-radius: 14px;
+  margin-bottom: 10px;
+}
+
+.settle-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.settle-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.badge.pending { background: var(--amber-soft); color: var(--amber); }
+.badge.verified { background: var(--green-soft); color: var(--green); }
+.badge.category { background: var(--accent-soft); color: var(--accent); }
+
+/* HISTORY LIST */
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 14px;
+  background: var(--input-bg);
+  border: 1px solid var(--surface-border);
+  border-radius: 14px;
+  margin-bottom: 8px;
+}
+
+.history-item-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.history-item-title {
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.history-item-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.history-item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.history-amount {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.del-btn {
+  background: transparent;
+  color: var(--red);
+  font-size: 13px;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+/* =========================================================
+   ENTERTAINMENT / VIDEO FEED STYLING
+========================================================= */
+.feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.feed-header h2 {
+  margin: 0;
+}
+
+/* CREATOR FILTER BAR */
+.creator-filter-wrap {
+  margin-bottom: 16px;
+}
+
+.creator-filter-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.creator-chips-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+
+.creator-chip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.creator-chip:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+
+.creator-chip.active {
+  background: var(--accent-gradient);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+}
+
+.creator-chip .creator-count {
+  font-size: 11px;
+  opacity: 0.8;
+  background: rgba(0,0,0,0.15);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+/* POST / REEL CARDS */
+.post-card {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 18px;
+  overflow: hidden;
+}
+
+.post-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.post-author-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.post-author-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.post-time {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.post-caption {
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  color: var(--text);
+  white-space: pre-line;
+}
+
+.post-media-container {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  margin-bottom: 12px;
+  border: 1px solid var(--surface-border);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 520px;
+}
+
+.post-media-container video {
+  width: 100%;
+  max-height: 520px;
+  display: block;
+  object-fit: contain;
+  background: #000;
+  border-radius: 14px;
+}
+
+.post-media-container img {
+  width: 100%;
+  max-height: 520px;
+  display: block;
+  object-fit: contain;
+  border-radius: 14px;
+}
+
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 4px;
+}
+
+.post-actions-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--input-bg);
+  border: 1px solid var(--surface-border);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.like-btn.liked {
+  background: var(--red-soft);
+  color: var(--red);
+  border-color: var(--red);
+}
+
+/* UPLOAD PROGRESS BAR */
+.progress-bar-wrap {
+  width: 100%;
+  height: 8px;
+  background: var(--input-bg);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent-gradient);
+  width: 0%;
+  transition: width 0.2s ease;
+}
+
+/* SEARCH & FILTER BAR */
+.filter-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+/* MODALS */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modal.hidden {
+  display: none !important;
+}
+
+.modal-card {
+  width: min(480px, 100%);
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-card h3 {
+  margin: 0 0 14px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+/* AUTH TABS */
+.auth-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  background: var(--input-bg);
+  padding: 4px;
+  border-radius: 12px;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.auth-tab-btn.active {
+  background: var(--surface-card);
+  color: var(--text);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* MESSAGES & NOTICES */
+.msg {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.msg.error { background: var(--red-soft); color: var(--red); }
+.msg.success { background: var(--green-soft); color: var(--green); }
+.msg.info { background: var(--accent-soft); color: var(--accent); }
+
+.empty-state {
+  text-align: center;
+  padding: 30px 16px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.empty-icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+.hidden {
+  display: none !important;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- =========================
+       APP HEADER
+  ========================== -->
+  <header>
+    <div class="brand">
+      <div class="logo">🏠</div>
+      <div>
+        <h1>Hostel Hub</h1>
+        <div class="subtitle">
+          <span id="headerStatusDot" class="status-dot"></span>
+          <span id="connectionStatus">Connecting...</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <button id="themeToggleBtn" class="icon-btn" title="Toggle Dark/Light Mode">🌙</button>
+      
+      <!-- USER / AUTH BUTTON -->
+      <div id="authHeaderContainer">
+        <button id="loginModalOpenBtn" class="auth-header-btn">
+          <span>🔑</span>
+          <span>Log In</span>
+        </button>
+      </div>
+
+      <button id="adminStatusBtn" class="admin-pill" title="Toggle Admin Mode">
+        <span>🔒</span>
+        <span id="adminStatusText">Admin</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- =========================
+       BILLING CYCLE BAR
+  ========================== -->
+  <div class="cycle-bar">
+    <div class="cycle-left">
+      <span>📅 Mess Cycle:</span>
+      <select id="cycleSelect" class="cycle-select">
+        <option value="current">Current Month</option>
+        <option value="all">All Time</option>
+      </select>
+    </div>
+    <button id="quickWhatsAppBtn" class="btn secondary small-btn" title="Generate WhatsApp Summary">
+      📲 WhatsApp
+    </button>
+  </div>
+
+  <!-- =========================
+       DESKTOP NAVIGATION TABS
+  ========================== -->
+  <nav class="desktop-nav">
+    <button class="desktop-tab-btn active" data-tab="tab-dashboard">📊 Dashboard</button>
+    <button class="desktop-tab-btn" data-tab="tab-entertainment">🎬 Entertainment</button>
+    <button class="desktop-tab-btn" data-tab="tab-add">➕ Add Expense</button>
+    <button class="desktop-tab-btn" data-tab="tab-balances">⚖️ Balances</button>
+    <button class="desktop-tab-btn" data-tab="tab-history">📜 History</button>
+    <button class="desktop-tab-btn" data-tab="tab-settings">⚙️ Settings</button>
+  </nav>
+
+  <!-- =========================
+       TAB 1: DASHBOARD
+  ========================== -->
+  <section id="tab-dashboard" class="tab-view active">
+    <div class="stats-grid">
+      <div class="stat-box">
+        <small>Total Mess Spend</small>
+        <b id="dashTotalSpent">Rs 0</b>
+      </div>
+      <div class="stat-box">
+        <small>Total Entries</small>
+        <b id="dashTotalCount">0</b>
+      </div>
+      <div class="stat-box">
+        <small>Members Count</small>
+        <b id="dashMemberCount">0</b>
+      </div>
+      <div class="stat-box">
+        <small>Settlements Needed</small>
+        <b id="dashSettlementsCount">0</b>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <button class="btn primary" id="dashQuickAddBtn">➕ Add Expense</button>
+      <button class="btn secondary" id="dashWatchReelsBtn">🎬 Watch Videos</button>
+      <button class="btn secondary" id="dashWhatsAppBtn">📲 WhatsApp Summary</button>
+    </div>
+
+    <!-- RECOMMENDED SETTLEMENTS -->
+    <div class="card">
+      <h2>
+        <span class="dot"></span>
+        Simplified Settle-Up Plan
+      </h2>
+      <div id="dashSettlementsList">
+        <div class="empty-state">
+          <div class="empty-icon">🤝</div>
+          No settlements pending for this cycle.
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK BALANCES -->
+    <div class="card">
+      <h2>
+        <span class="dot"></span>
+        Roommate Balances
+      </h2>
+      <div id="dashBalancesList">
+        <div class="empty-state">
+          <div class="empty-icon">👥</div>
+          Add members to view balances.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       TAB 2: ENTERTAINMENT & VIDEO FEED
+  ========================== -->
+  <section id="tab-entertainment" class="tab-view">
+    <div class="card" style="padding-bottom:12px;">
+      <div class="feed-header">
+        <div>
+          <h2>
+            <span class="dot" style="background:#f43f5e;"></span>
+            Hostel Reels & Moments
+          </h2>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">
+            Watch & share videos and photos with your roommates
+          </div>
+        </div>
+        <button id="openUploadPostModalBtn" class="btn primary small-btn">
+          📹 Upload Video / Photo
+        </button>
+      </div>
+
+      <!-- CREATOR SIMPLIFIER / FILTER -->
+      <div class="creator-filter-wrap">
+        <div class="creator-filter-head">
+          <span>👀 Simplify / Filter by Creator:</span>
+          <span id="creatorFilterActiveText" style="color:var(--accent);">All Creators</span>
+        </div>
+        <div id="creatorChipsScroll" class="creator-chips-scroll">
+          <div class="creator-chip active" data-creator="all">
+            <span>✨ All Creators</span>
+            <span id="creatorAllCount" class="creator-count">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEED POSTS CONTAINER -->
+    <div id="entertainmentFeedList">
+      <div class="empty-state">
+        <div class="empty-icon">🎬</div>
+        No videos or photos shared yet. Tap "+ Upload Video / Photo" to be the first!
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       TAB 3: ADD EXPENSE
+  ========================== -->
+  <section id="tab-add" class="tab-view">
+    <div class="card">
+      <h2>
+        <span class="dot"></span>
+        Log New Hostel Expense
+      </h2>
+
+      <div class="row">
+        <div class="field form-group">
+          <label>Meal / Category</label>
+          <select id="expenseMeal">
+            <option value="Breakfast">🍳 Breakfast</option>
+            <option value="Lunch">🍛 Lunch</option>
+            <option value="Dinner">🍲 Dinner</option>
+            <option value="Groceries">🛒 Groceries / Ration</option>
+            <option value="Tea/Snacks">☕ Chai & Snacks</option>
+            <option value="Utilities">💡 Electricity / Gas / Water</option>
+            <option value="Internet">📶 Wi-Fi Bill</option>
+            <option value="Cleaning">🧹 Cleaning / Maid</option>
+            <option value="Rent">🏠 Room Rent</option>
+            <option value="Custom">✨ Custom Name</option>
+          </select>
+        </div>
+
+        <div class="field form-group hidden" id="customMealField">
+          <label>Custom Name</label>
+          <input id="expenseCustomMeal" placeholder="e.g. Biryani, Water Tanker">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Location / Details (Optional)</label>
+        <input id="expenseLocation" placeholder="e.g. Savour Foods, Mess Mart, Room 204">
+      </div>
+
+      <div class="form-group">
+        <label>Amount Paid (Rs)</label>
+        <input id="expenseAmount" type="number" step="any" placeholder="0.00" inputmode="decimal">
+        <div class="quick-amount-pills">
+          <button type="button" class="amount-pill" data-add="100">+100</button>
+          <button type="button" class="amount-pill" data-add="200">+200</button>
+          <button type="button" class="amount-pill" data-add="500">+500</button>
+          <button type="button" class="amount-pill" data-add="1000">+1000</button>
+          <button type="button" class="amount-pill" data-add="2000">+2000</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field form-group">
+          <label>Paid By</label>
+          <select id="expensePaidBy">
+            <option value="">Select Payer</option>
+          </select>
+        </div>
+
+        <div class="field form-group">
+          <label>Split Mode</label>
+          <select id="expenseSplitMode">
+            <option value="equal">Equal Split</option>
+            <option value="custom">Custom Amounts</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- MEMBER PARTICIPANTS -->
+      <div class="chips-head">
+        <label style="font-size:12px;font-weight:700;color:var(--text-muted);">
+          Who Participated / Ate?
+        </label>
+        <button type="button" id="selectAllChipsBtn" class="link-btn">Select All</button>
+      </div>
+
+      <div id="expenseMembersGrid" class="chips-grid"></div>
+
+      <!-- CUSTOM SPLIT BREAKDOWN -->
+      <div id="customSplitContainer" class="hidden">
+        <label style="font-size:12px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:6px;">
+          Assign Exact Amounts to Each Person:
+        </label>
+        <div id="customSplitList"></div>
+      </div>
+
+      <!-- PREVIEW PILL -->
+      <div id="splitPreviewBox" class="split-preview">
+        Select members to preview calculation.
+      </div>
+
+      <div id="expenseError" class="msg error hidden"></div>
+      <div id="expenseSuccess" class="msg success hidden"></div>
+
+      <button id="saveExpenseBtn" class="btn primary">
+        💾 Save Live Expense
+      </button>
+    </div>
+  </section>
+
+  <!-- =========================
+       TAB 4: BALANCES & SETTLEMENTS
+  ========================== -->
+  <section id="tab-balances" class="tab-view">
+    <div class="card">
+      <h2>
+        <span class="dot"></span>
+        Simplified Debt Settlement
+      </h2>
+      <p style="font-size:13px;color:var(--text-muted);margin:-8px 0 14px;">
+        Calculated using optimal cash flow algorithm to eliminate circular debts.
+      </p>
+      <div id="settlementsContainer">
+        <div class="empty-state">
+          <div class="empty-icon">🤝</div>
+          No settlements pending. All clear!
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>
+        <span class="dot"></span>
+        Net Room Balances
+      </h2>
+      <div id="balancesContainer">
+        <div class="empty-state">
+          <div class="empty-icon">👥</div>
+          Add members to see balances.
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTLEMENT HISTORY / VERIFICATIONS -->
+    <div class="card">
+      <h2>
+        <span class="dot"></span>
+        Settlement Payment Records
+      </h2>
+      <div id="settlementRecordsContainer">
+        <div class="empty-state">
+          <div class="empty-icon">📝</div>
+          No payment proofs recorded yet.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       TAB 5: EXPENSE HISTORY
+  ========================== -->
+  <section id="tab-history" class="tab-view">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+        <h2 style="margin:0;">
+          <span class="dot"></span>
+          Expense Records
+        </h2>
+        <button id="historyExportCSVBtn" class="btn secondary small-btn">📥 CSV</button>
+      </div>
+
+      <div class="filter-row">
+        <input id="historySearch" placeholder="🔍 Search location or notes..." style="flex:2;">
+        <select id="historyCategoryFilter" style="flex:1;">
+          <option value="all">All Categories</option>
+          <option value="Breakfast">Breakfast</option>
+          <option value="Lunch">Lunch</option>
+          <option value="Dinner">Dinner</option>
+          <option value="Groceries">Groceries</option>
+          <option value="Tea/Snacks">Tea/Snacks</option>
+          <option value="Utilities">Utilities</option>
+          <option value="Internet">Internet</option>
+          <option value="Cleaning">Cleaning</option>
+          <option value="Rent">Rent</option>
+        </select>
+      </div>
+
+      <div id="historyList">
+        <div class="empty-state">
+          <div class="empty-icon">🧾</div>
+          No expenses recorded for this cycle.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       TAB 6: SETTINGS & ADMIN
+  ========================== -->
+  <section id="tab-settings" class="tab-view">
+    <!-- AUTHENTICATION CARD -->
+    <div class="card">
+      <h2>
+        <span class="dot"></span>
+        Your Account & Profile
+      </h2>
+      <div id="accountProfileStatus" style="font-size:14px;margin-bottom:14px;">
+        Not signed in with email.
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button id="settingsLoginBtn" class="btn primary small-btn">
+          🔑 Sign In / Register
+        </button>
+        <button id="settingsSignOutBtn" class="btn secondary small-btn hidden">
+          🚪 Sign Out
+        </button>
+      </div>
+    </div>
+
+    <!-- ADMIN ACCESS -->
+    <div class="card">
+      <h2>
+        <span class="dot"></span>
+        Admin Controls
+      </h2>
+      <div id="adminCardNotice" class="msg info">
+        Admin status allows adding/removing members, verifying payments, and deleting records.
+      </div>
+      <button id="adminToggleActionBtn" class="btn secondary">
+        🔑 Enter Admin PIN
+      </button>
+    </div>
+
+    <!-- MEMBER MANAGEMENT -->
+    <div class="card">
+      <h2>
+        <span class="dot"></span>
+        Hostel Members Management
+      </h2>
+
+      <div id="addMemberForm" class="row form-group">
+        <input id="newMemberInput" placeholder="Enter member name (e.g. Ali, Hamza)">
+        <button id="addMemberBtn" class="btn primary small-btn" style="flex:0 0 90px;">Add</button>
+      </div>
+
+      <div id="membersManagementList"></div>
+    </div>
+
+    <!-- BACKUP & EXPORT -->
+    <div class="card">
+      <h2>
+        <span class="dot"></span>
+        Data Sharing & Backup
+      </h2>
+      <div class="quick-actions" style="grid-template-columns:1fr 1fr;">
+        <button id="settingsWhatsAppBtn" class="btn secondary">📲 WhatsApp Summary</button>
+        <button id="settingsCSVBtn" class="btn secondary">📥 Download CSV</button>
+      </div>
+    </div>
+
+    <!-- DANGER ZONE -->
+    <div class="card" id="dangerZoneCard">
+      <h2>
+        <span class="dot" style="background:var(--red);"></span>
+        Danger Zone (Admin Only)
+      </h2>
+      <p style="font-size:13px;color:var(--text-muted);margin:-8px 0 14px;">
+        Clears all expense and settlement records permanently.
+      </p>
+      <button id="clearAllBtn" class="btn secondary" style="color:var(--red);border-color:var(--red);">
+        ⚠️ Clear All Expenses
+      </button>
+    </div>
+  </section>
+
+</div>
+
+<!-- =========================
+     MOBILE BOTTOM NAV
+========================== -->
+<nav class="bottom-nav">
+  <button class="nav-item active" data-tab="tab-dashboard">
+    <span class="icon">📊</span>
+    <span>Home</span>
+  </button>
+  <button class="nav-item" data-tab="tab-entertainment">
+    <span class="icon">🎬</span>
+    <span>Feed</span>
+  </button>
+  <button class="nav-item fab-item" data-tab="tab-add">
+    <div class="fab-btn">＋</div>
+  </button>
+  <button class="nav-item" data-tab="tab-balances">
+    <span class="icon">⚖️</span>
+    <span>Balances</span>
+  </button>
+  <button class="nav-item" data-tab="tab-settings">
+    <span class="icon">⚙️</span>
+    <span>Settings</span>
+  </button>
+</nav>
+
+<!-- =========================
+     AUTH MODAL (EMAIL LOGIN / SIGNUP)
+========================== -->
+<div id="authModal" class="modal hidden">
+  <div class="modal-card">
+    <div class="auth-tabs">
+      <button id="authTabLogin" class="auth-tab-btn active">Sign In</button>
+      <button id="authTabSignup" class="auth-tab-btn">Create Account</button>
+    </div>
+
+    <!-- SIGN IN FORM -->
+    <div id="loginFormSection">
+      <h3>Welcome Back</h3>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input id="loginEmail" type="email" placeholder="you@hostel.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input id="loginPassword" type="password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+        <button type="button" id="forgotPasswordBtn" class="link-btn" style="padding:0;font-size:12px;">Forgot password?</button>
+      </div>
+      <div id="loginError" class="msg error hidden"></div>
+      <div id="loginSuccess" class="msg success hidden"></div>
+      <div class="modal-actions">
+        <button id="doLoginBtn" class="btn primary">Sign In</button>
+        <button id="authCloseBtn" class="btn secondary">Cancel</button>
+      </div>
+    </div>
+
+    <!-- SIGN UP FORM -->
+    <div id="signupFormSection" class="hidden">
+      <h3>Join Hostel Hub</h3>
+      <div class="form-group">
+        <label>Your Full Name</label>
+        <input id="signupName" type="text" placeholder="e.g. Ali Hassan">
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input id="signupEmail" type="email" placeholder="you@hostel.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password (min 6 characters)</label>
+        <input id="signupPassword" type="password" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      <div id="signupError" class="msg error hidden"></div>
+      <div id="signupSuccess" class="msg success hidden"></div>
+      <div class="modal-actions">
+        <button id="doSignupBtn" class="btn primary">Create Account</button>
+        <button id="signupCancelBtn" class="btn secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================
+     UPLOAD VIDEO/PHOTO MODAL
+========================== -->
+<div id="uploadPostModal" class="modal hidden">
+  <div class="modal-card">
+    <h3>📹 Post to Hostel Feed</h3>
+    <p style="font-size:13px;color:var(--text-muted);margin:-8px 0 14px;">
+      Share a video or photo with your room & friends.
+    </p>
+
+    <!-- MEDIA TYPE PICKER -->
+    <div class="form-group">
+      <label>Media Type</label>
+      <div class="row">
+        <button type="button" id="mediaTypeVideoBtn" class="btn primary small-btn" style="flex:1;">🎥 Video</button>
+        <button type="button" id="mediaTypePhotoBtn" class="btn secondary small-btn" style="flex:1;">📸 Photo</button>
+      </div>
+    </div>
+
+    <!-- CAPTION / TITLE -->
+    <div class="form-group">
+      <label>Title / Caption</label>
+      <textarea id="postCaptionInput" rows="2" placeholder="e.g. Late night gaming session in Room 204! 🎮"></textarea>
+    </div>
+
+    <!-- MEDIA INPUT SELECTION -->
+    <div class="form-group">
+      <label>Choose Video / Photo</label>
+      <input id="postFileInput" type="file" accept="video/*,image/*" style="padding:8px 10px;">
+    </div>
+
+    <div class="form-group">
+      <label>Or Paste Online URL (YouTube, MP4, image)</label>
+      <input id="postUrlInput" type="url" placeholder="https://example.com/video.mp4">
+    </div>
+
+    <!-- PREVIEW AREA -->
+    <div id="uploadPreviewBox" class="post-media-container hidden" style="max-height:260px;margin-bottom:12px;"></div>
+
+    <!-- PROGRESS BAR -->
+    <div id="uploadProgressWrap" class="progress-bar-wrap hidden">
+      <div id="uploadProgressBar" class="progress-bar-fill"></div>
+    </div>
+    <div id="uploadStatusText" style="font-size:12px;color:var(--text-muted);margin-bottom:8px;text-align:center;"></div>
+
+    <div id="uploadError" class="msg error hidden"></div>
+
+    <div class="modal-actions">
+      <button id="submitPostBtn" class="btn primary">🚀 Publish Post</button>
+      <button id="closeUploadPostModalBtn" class="btn secondary">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================
+     ADMIN PIN MODAL
+========================== -->
+<div id="adminPinModal" class="modal hidden">
+  <div class="modal-card">
+    <h3>Admin PIN Authentication</h3>
+    <p style="font-size:13px;color:var(--text-muted);margin:-6px 0 14px;">
+      Default PIN is <b>1234</b>.
+    </p>
+    <div class="form-group">
+      <label>Enter PIN</label>
+      <input id="adminPinInput" type="password" placeholder="••••" autocomplete="off" inputmode="numeric">
+    </div>
+    <div id="adminPinError" class="msg error hidden"></div>
+    <div class="modal-actions">
+      <button id="adminPinSubmitBtn" class="btn primary">Unlock Admin Mode</button>
+      <button id="adminPinCancelBtn" class="btn secondary">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================
+     SETTLE UP MODAL
+========================== -->
+<div id="settleModal" class="modal hidden">
+  <div class="modal-card">
+    <h3 id="settleModalTitle">Settle Up Payment</h3>
+    <div id="settleModalDetails" class="msg info" style="margin-bottom:14px;"></div>
+
+    <div class="form-group">
+      <label>Payment Method</label>
+      <select id="settlePaymentMethod">
+        <option value="Cash">💵 Cash</option>
+        <option value="EasyPaisa">📱 EasyPaisa</option>
+        <option value="JazzCash">📲 JazzCash</option>
+        <option value="Nayapay">💳 Nayapay</option>
+        <option value="SadaPay">💳 SadaPay</option>
+        <option value="Raast">⚡ Raast ID</option>
+        <option value="Bank Transfer">🏦 Bank Transfer</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Note / Transaction ID / Proof</label>
+      <textarea id="settleNoteInput" rows="2" placeholder="e.g. Sent via EasyPaisa TID: 182949, or Cash paid at dinner"></textarea>
+    </div>
+
+    <div id="settleError" class="msg error hidden"></div>
+
+    <div class="modal-actions">
+      <button id="settleSendProofBtn" class="btn primary">Send Payment Proof</button>
+      <button id="settleConfirmVerifiedBtn" class="btn success hidden">Verify Received</button>
+      <button id="settleCancelBtn" class="btn secondary">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================
+     WHATSAPP PREVIEW MODAL
+========================== -->
+<div id="whatsappModal" class="modal hidden">
+  <div class="modal-card">
+    <h3>📲 WhatsApp Room Summary</h3>
+    <p style="font-size:13px;color:var(--text-muted);margin:-6px 0 14px;">
+      Share this formatted mess update in your hostel group:
+    </p>
+    <textarea id="whatsappTextPreview" rows="10" readonly style="font-family:monospace;font-size:12px;line-height:1.4;background:var(--bg);"></textarea>
+    <div class="modal-actions">
+      <button id="whatsappOpenBtn" class="btn primary">🚀 Send on WhatsApp</button>
+      <button id="whatsappCopyBtn" class="btn secondary">📋 Copy Text</button>
+      <button id="whatsappCloseBtn" class="btn secondary">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================
+     JAVASCRIPT APPLICATION LOGIC
+========================================================= -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+import { getDatabase, ref, onValue, push, remove, set, update } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail, updateProfile, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
+
+/* =========================================================
+   CONFIG & INITIALIZATION
+========================================================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyAGac_EZWSojQd9yYmVOHc1HupZGYuNvX4",
+  authDomain: "hostel-expense-tracker-5669f.firebaseapp.com",
+  databaseURL: "https://hostel-expense-tracker-5669f-default-rtdb.firebaseio.com",
+  projectId: "hostel-expense-tracker-5669f",
+  storageBucket: "hostel-expense-tracker-5669f.firebasestorage.app",
+  messagingSenderId: "432554727301",
+  appId: "1:432554727301:web:a538c74771b3df0bd756ec",
+  measurementId: "G-DE8VR92MTE"
+};
+
+let db, auth, storage, currentUser = null;
+let members = [];
+let expenses = {};
+let settlements = {};
+let posts = {};
+let selectedCreatorFilter = "all";
+let uploadSelectedMediaType = "video";
+let currentFileToUpload = null;
+let isAdmin = false;
+let activeCycle = "current";
+let customSplitValues = {};
+let pendingSettleTarget = null;
+
+const $ = id => document.getElementById(id);
+
+/* Currency formatter */
+const money = n => "Rs " + Math.round(Number(n || 0)).toLocaleString("en-PK");
+
+/* Initials generator */
+const initials = str => (str || "?").trim().split(/\s+/).slice(0, 2).map(x => x[0]).join("").toUpperCase();
+
+/* Escape HTML */
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+}[c]));
+
+/* Time Formatter */
+function timeAgo(timestamp) {
+  if (!timestamp) return "Just now";
+  const sec = Math.floor((Date.now() - timestamp) / 1000);
+  if (sec < 60) return "Just now";
+  const min = Math.floor(sec / 60);
+  if (min < 60) return `${min}m ago`;
+  const hr = Math.floor(min / 60);
+  if (hr < 24) return `${hr}h ago`;
+  const days = Math.floor(hr / 24);
+  if (days < 30) return `${days}d ago`;
+  return new Date(timestamp).toLocaleDateString();
+}
+
+/* =========================================================
+   LOCAL STORAGE CACHE BACKUP
+========================================================= */
+function saveLocalCache() {
+  try {
+    localStorage.setItem("hostel_cache_members", JSON.stringify(members));
+    localStorage.setItem("hostel_cache_expenses", JSON.stringify(expenses));
+    localStorage.setItem("hostel_cache_settlements", JSON.stringify(settlements));
+    localStorage.setItem("hostel_cache_posts", JSON.stringify(posts));
+  } catch (e) {}
+}
+
+function loadLocalCache() {
+  try {
+    const m = localStorage.getItem("hostel_cache_members");
+    if (m) members = JSON.parse(m);
+    const e = localStorage.getItem("hostel_cache_expenses");
+    if (e) expenses = JSON.parse(e);
+    const s = localStorage.getItem("hostel_cache_settlements");
+    if (s) settlements = JSON.parse(s);
+    const p = localStorage.getItem("hostel_cache_posts");
+    if (p) posts = JSON.parse(p);
+  } catch (e) {}
+}
+
+/* =========================================================
+   THEME TOGGLE
+========================================================= */
+const savedTheme = localStorage.getItem("hostel_theme") || "dark";
+document.documentElement.setAttribute("data-theme", savedTheme);
+updateThemeIcon(savedTheme);
+
+$("themeToggleBtn").addEventListener("click", () => {
+  const current = document.documentElement.getAttribute("data-theme") || "dark";
+  const next = current === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  localStorage.setItem("hostel_theme", next);
+  updateThemeIcon(next);
+});
+
+function updateThemeIcon(t) {
+  $("themeToggleBtn").textContent = t === "dark" ? "🌙" : "☀️";
+}
+
+/* =========================================================
+   TAB SWITCHING LOGIC
+========================================================= */
+function switchTab(tabId) {
+  document.querySelectorAll(".tab-view").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(".desktop-tab-btn").forEach(el => el.classList.remove("active"));
+
+  const targetView = $(tabId);
+  if (targetView) targetView.classList.add("active");
+
+  const mobileNavMatch = document.querySelector(`.bottom-nav [data-tab="${tabId}"]`);
+  if (mobileNavMatch) mobileNavMatch.classList.add("active");
+
+  const desktopNavMatch = document.querySelector(`.desktop-nav [data-tab="${tabId}"]`);
+  if (desktopNavMatch) desktopNavMatch.classList.add("active");
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.querySelectorAll("[data-tab]").forEach(btn => {
+  btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+});
+
+$("dashQuickAddBtn").addEventListener("click", () => switchTab("tab-add"));
+$("dashWatchReelsBtn").addEventListener("click", () => switchTab("tab-entertainment"));
+
+/* =========================================================
+   AUTH MODAL & EMAIL LOGIN / SIGNUP
+========================================================= */
+function updateAuthUI() {
+  const container = $("authHeaderContainer");
+  const profileStatus = $("accountProfileStatus");
+  const settingsLoginBtn = $("settingsLoginBtn");
+  const settingsSignOutBtn = $("settingsSignOutBtn");
+
+  if (currentUser && !currentUser.isAnonymous && currentUser.email) {
+    const displayName = currentUser.displayName || currentUser.email.split("@")[0];
+    container.innerHTML = `
+      <div class="user-profile-badge" id="userHeaderBadge" title="${esc(currentUser.email)}">
+        <div class="user-avatar-small">${initials(displayName)}</div>
+        <span>${esc(displayName)}</span>
+      </div>
+    `;
+
+    profileStatus.innerHTML = `
+      <div style="font-weight:700;color:var(--green);margin-bottom:4px;">✅ Logged in as ${esc(displayName)}</div>
+      <div style="color:var(--text-muted);font-size:12px;">${esc(currentUser.email)}</div>
+    `;
+    settingsLoginBtn.classList.add("hidden");
+    settingsSignOutBtn.classList.remove("hidden");
+
+    $("userHeaderBadge")?.addEventListener("click", () => {
+      switchTab("tab-settings");
+    });
+
+    // Auto-select in Add Expense payer if matched
+    if (members.includes(displayName)) {
+      $("expensePaidBy").value = displayName;
+    }
+
+  } else {
+    container.innerHTML = `
+      <button id="loginModalOpenBtn" class="auth-header-btn">
+        <span>🔑</span>
+        <span>Log In</span>
+      </button>
+    `;
+    $("loginModalOpenBtn").addEventListener("click", openAuthModal);
+
+    profileStatus.innerHTML = `<span style="color:var(--text-muted);">Not signed in. Sign in with your email to post videos and track your balances.</span>`;
+    settingsLoginBtn.classList.remove("hidden");
+    settingsSignOutBtn.classList.add("hidden");
+  }
+}
+
+function openAuthModal() {
+  $("authModal").classList.remove("hidden");
+  $("loginError").classList.add("hidden");
+  $("signupError").classList.add("hidden");
+}
+
+$("settingsLoginBtn").addEventListener("click", openAuthModal);
+
+$("authCloseBtn").addEventListener("click", () => {
+  $("authModal").classList.add("hidden");
+});
+$("signupCancelBtn").addEventListener("click", () => {
+  $("authModal").classList.add("hidden");
+});
+
+$("authTabLogin").addEventListener("click", () => {
+  $("authTabLogin").classList.add("active");
+  $("authTabSignup").classList.remove("active");
+  $("loginFormSection").classList.remove("hidden");
+  $("signupFormSection").classList.add("hidden");
+});
+
+$("authTabSignup").addEventListener("click", () => {
+  $("authTabSignup").classList.add("active");
+  $("authTabLogin").classList.remove("active");
+  $("signupFormSection").classList.remove("hidden");
+  $("loginFormSection").classList.add("hidden");
+});
+
+// DO LOGIN
+$("doLoginBtn").addEventListener("click", async () => {
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+  const errBox = $("loginError");
+  const succBox = $("loginSuccess");
+  errBox.classList.add("hidden");
+  succBox.classList.add("hidden");
+
+  if (!email || !password) {
+    errBox.textContent = "Please enter email and password.";
+    errBox.classList.remove("hidden");
+    return;
+  }
+
+  try {
+    $("doLoginBtn").disabled = true;
+    $("doLoginBtn").textContent = "Signing In...";
+    await signInWithEmailAndPassword(auth, email, password);
+    succBox.textContent = "Welcome back! Logged in successfully.";
+    succBox.classList.remove("hidden");
+    setTimeout(() => {
+      $("authModal").classList.add("hidden");
+      $("doLoginBtn").disabled = false;
+      $("doLoginBtn").textContent = "Sign In";
+    }, 1000);
+  } catch (err) {
+    $("doLoginBtn").disabled = false;
+    $("doLoginBtn").textContent = "Sign In";
+    let msg = err.message;
+    if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") {
+      msg = "Invalid email or password. Please try again.";
+    } else if (err.code === "auth/user-not-found") {
+      msg = "No account found with this email. Switch to 'Create Account'.";
+    }
+    errBox.textContent = msg;
+    errBox.classList.remove("hidden");
+  }
+});
+
+// DO SIGNUP
+$("doSignupBtn").addEventListener("click", async () => {
+  const name = $("signupName").value.trim();
+  const email = $("signupEmail").value.trim();
+  const password = $("signupPassword").value;
+  const errBox = $("signupError");
+  const succBox = $("signupSuccess");
+  errBox.classList.add("hidden");
+  succBox.classList.add("hidden");
+
+  if (!name) {
+    errBox.textContent = "Please enter your full name.";
+    errBox.classList.remove("hidden");
+    return;
+  }
+  if (!email || !password) {
+    errBox.textContent = "Please enter email and password.";
+    errBox.classList.remove("hidden");
+    return;
+  }
+  if (password.length < 6) {
+    errBox.textContent = "Password must be at least 6 characters.";
+    errBox.classList.remove("hidden");
+    return;
+  }
+
+  try {
+    $("doSignupBtn").disabled = true;
+    $("doSignupBtn").textContent = "Creating Account...";
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(cred.user, { displayName: name });
+
+    // Store user info in RTDB
+    if (db) {
+      await set(ref(db, `users/${cred.user.uid}`), {
+        name,
+        email,
+        createdAt: Date.now()
+      });
+
+      // Add to members list if not already present
+      if (!members.includes(name)) {
+        await set(ref(db, "roommates"), [...members, name]);
+      }
+    }
+
+    succBox.textContent = `Account created! Welcome, ${name}!`;
+    succBox.classList.remove("hidden");
+
+    setTimeout(() => {
+      $("authModal").classList.add("hidden");
+      $("doSignupBtn").disabled = false;
+      $("doSignupBtn").textContent = "Create Account";
+    }, 1000);
+
+  } catch (err) {
+    $("doSignupBtn").disabled = false;
+    $("doSignupBtn").textContent = "Create Account";
+    let msg = err.message;
+    if (err.code === "auth/email-already-in-use") {
+      msg = "An account already exists with this email. Switch to 'Sign In'.";
+    }
+    errBox.textContent = msg;
+    errBox.classList.remove("hidden");
+  }
+});
+
+// FORGOT PASSWORD
+$("forgotPasswordBtn").addEventListener("click", async () => {
+  const email = $("loginEmail").value.trim();
+  if (!email) {
+    alert("Please enter your email address in the field above first.");
+    return;
+  }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert(`Password reset link sent to ${email}. Check your inbox!`);
+  } catch (err) {
+    alert("Reset failed: " + err.message);
+  }
+});
+
+// SIGN OUT
+$("settingsSignOutBtn").addEventListener("click", async () => {
+  if (!confirm("Are you sure you want to sign out?")) return;
+  try {
+    await signOut(auth);
+    // fallback to anonymous login for RTDB rules
+    await signInAnonymously(auth);
+    updateAuthUI();
+  } catch (err) {
+    alert("Sign out failed: " + err.message);
+  }
+});
+
+/* =========================================================
+   ENTERTAINMENT / VIDEO POSTING FEED LOGIC
+========================================================= */
+$("openUploadPostModalBtn").addEventListener("click", () => {
+  if (!currentUser || currentUser.isAnonymous) {
+    if (confirm("You need to sign in with your email to upload videos & photos. Open login now?")) {
+      openAuthModal();
+    }
+    return;
+  }
+  openUploadPostModal();
+});
+
+function openUploadPostModal() {
+  $("uploadPostModal").classList.remove("hidden");
+  $("postCaptionInput").value = "";
+  $("postFileInput").value = "";
+  $("postUrlInput").value = "";
+  $("uploadPreviewBox").classList.add("hidden");
+  $("uploadProgressWrap").classList.add("hidden");
+  $("uploadError").classList.add("hidden");
+  $("uploadStatusText").textContent = "";
+  currentFileToUpload = null;
+  setMediaType("video");
+}
+
+$("closeUploadPostModalBtn").addEventListener("click", () => {
+  $("uploadPostModal").classList.add("hidden");
+});
+
+function setMediaType(type) {
+  uploadSelectedMediaType = type;
+  if (type === "video") {
+    $("mediaTypeVideoBtn").className = "btn primary small-btn";
+    $("mediaTypePhotoBtn").className = "btn secondary small-btn";
+    $("postFileInput").accept = "video/*";
+  } else {
+    $("mediaTypePhotoBtn").className = "btn primary small-btn";
+    $("mediaTypeVideoBtn").className = "btn secondary small-btn";
+    $("postFileInput").accept = "image/*";
+  }
+}
+
+$("mediaTypeVideoBtn").addEventListener("click", () => setMediaType("video"));
+$("mediaTypePhotoBtn").addEventListener("click", () => setMediaType("photo"));
+
+// PREVIEW FILE SELECTION
+$("postFileInput").addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  currentFileToUpload = file;
+
+  const previewBox = $("uploadPreviewBox");
+  previewBox.innerHTML = "";
+  previewBox.classList.remove("hidden");
+
+  const url = URL.createObjectURL(file);
+  if (file.type.startsWith("video")) {
+    setMediaType("video");
+    previewBox.innerHTML = `<video src="${url}" controls playsinline style="max-height:260px;"></video>`;
+  } else {
+    setMediaType("photo");
+    previewBox.innerHTML = `<img src="${url}" style="max-height:260px;object-fit:contain;">`;
+  }
+});
+
+// PREVIEW URL SELECTION
+$("postUrlInput").addEventListener("input", e => {
+  const url = e.target.value.trim();
+  if (!url) return;
+  currentFileToUpload = null;
+  const previewBox = $("uploadPreviewBox");
+  previewBox.innerHTML = "";
+  previewBox.classList.remove("hidden");
+
+  if (url.match(/\.(mp4|webm|mov|ogg)($|\?)/i) || uploadSelectedMediaType === "video") {
+    previewBox.innerHTML = `<video src="${esc(url)}" controls playsinline style="max-height:260px;"></video>`;
+  } else {
+    previewBox.innerHTML = `<img src="${esc(url)}" style="max-height:260px;object-fit:contain;">`;
+  }
+});
+
+// SUBMIT POST (UPLOAD TO STORAGE OR USE URL)
+$("submitPostBtn").addEventListener("click", async () => {
+  const caption = $("postCaptionInput").value.trim();
+  const directUrl = $("postUrlInput").value.trim();
+  const errBox = $("uploadError");
+  errBox.classList.add("hidden");
+
+  if (!caption && !currentFileToUpload && !directUrl) {
+    errBox.textContent = "Please provide a video/photo or caption.";
+    errBox.classList.remove("hidden");
+    return;
+  }
+
+  const authorName = currentUser?.displayName || currentUser?.email?.split("@")[0] || "Hostel Mate";
+  const authorId = currentUser?.uid || "guest";
+
+  $("submitPostBtn").disabled = true;
+  $("submitPostBtn").textContent = "Uploading...";
+
+  let finalMediaUrl = directUrl;
+
+  try {
+    if (currentFileToUpload) {
+      if (storage) {
+        $("uploadProgressWrap").classList.remove("hidden");
+        const fileExt = currentFileToUpload.name.split(".").pop();
+        const fileName = `post_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+        const storageReference = sRef(storage, `hostel_media/${fileName}`);
+
+        const uploadTask = uploadBytesResumable(storageReference, currentFileToUpload);
+
+        await new Promise((resolve, reject) => {
+          uploadTask.on(
+            "state_changed",
+            snapshot => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              $("uploadProgressBar").style.width = progress + "%";
+              $("uploadStatusText").textContent = `Uploading: ${Math.round(progress)}%`;
+            },
+            err => reject(err),
+            async () => {
+              finalMediaUrl = await getDownloadURL(uploadTask.snapshot.ref);
+              resolve();
+            }
+          );
+        });
+      } else {
+        // Fallback local object URL
+        finalMediaUrl = URL.createObjectURL(currentFileToUpload);
+      }
+    }
+
+    const postObj = {
+      caption,
+      mediaType: uploadSelectedMediaType,
+      mediaUrl: finalMediaUrl || "",
+      authorName,
+      authorId,
+      authorEmail: currentUser?.email || "",
+      createdAt: Date.now(),
+      likes: {}
+    };
+
+    if (db) {
+      await push(ref(db, "posts"), postObj);
+    } else {
+      const fakeId = "post_" + Date.now();
+      posts[fakeId] = postObj;
+      saveLocalCache();
+      renderFeed();
+    }
+
+    $("uploadPostModal").classList.add("hidden");
+    $("submitPostBtn").disabled = false;
+    $("submitPostBtn").textContent = "🚀 Publish Post";
+
+  } catch (err) {
+    $("submitPostBtn").disabled = false;
+    $("submitPostBtn").textContent = "🚀 Publish Post";
+    errBox.textContent = "Upload failed: " + err.message;
+    errBox.classList.remove("hidden");
+  }
+});
+
+/* =========================================================
+   CREATOR FILTER & FEED RENDERING
+========================================================= */
+function renderCreatorFilterChips() {
+  const container = $("creatorChipsScroll");
+  const postsList = Object.values(posts);
+  const creatorsMap = {};
+
+  postsList.forEach(p => {
+    const creator = p.authorName || "Anonymous";
+    creatorsMap[creator] = (creatorsMap[creator] || 0) + 1;
+  });
+
+  $("creatorAllCount").textContent = postsList.length;
+
+  let html = `
+    <div class="creator-chip ${selectedCreatorFilter === 'all' ? 'active' : ''}" data-creator="all">
+      <span>✨ All Creators</span>
+      <span class="creator-count">${postsList.length}</span>
+    </div>
+  `;
+
+  Object.entries(creatorsMap).sort((a,b) => b[1] - a[1]).forEach(([name, count]) => {
+    const isActive = selectedCreatorFilter === name;
+    html += `
+      <div class="creator-chip ${isActive ? 'active' : ''}" data-creator="${esc(name)}">
+        <span class="user-avatar-small" style="width:18px;height:18px;font-size:9px;">${initials(name)}</span>
+        <span>${esc(name)}</span>
+        <span class="creator-count">${count}</span>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+
+  container.querySelectorAll(".creator-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      selectedCreatorFilter = chip.dataset.creator;
+      $("creatorFilterActiveText").textContent = selectedCreatorFilter === "all" ? "All Creators" : `Creator: ${selectedCreatorFilter}`;
+      renderCreatorFilterChips();
+      renderFeed();
+    });
+  });
+}
+
+function renderFeed() {
+  const feedBox = $("entertainmentFeedList");
+  let postEntries = Object.entries(posts).map(([id, p]) => ({ id, ...p }))
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+  // Filter by creator if specified
+  if (selectedCreatorFilter !== "all") {
+    postEntries = postEntries.filter(p => (p.authorName || "") === selectedCreatorFilter);
+  }
+
+  if (!postEntries.length) {
+    feedBox.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🎬</div>
+        ${selectedCreatorFilter === "all" ? "No posts shared yet." : `No posts found by "${esc(selectedCreatorFilter)}".`}
+      </div>
+    `;
+    return;
+  }
+
+  feedBox.innerHTML = postEntries.map(p => {
+    const isLiked = currentUser && p.likes && p.likes[currentUser.uid];
+    const likesCount = Object.keys(p.likes || {}).length;
+    const canDelete = isAdmin || (currentUser && currentUser.uid === p.authorId);
+
+    let mediaHtml = "";
+    if (p.mediaUrl) {
+      if (p.mediaType === "video" || p.mediaUrl.match(/\.(mp4|webm|mov|ogg)($|\?)/i)) {
+        mediaHtml = `
+          <div class="post-media-container">
+            <video src="${esc(p.mediaUrl)}" controls playsinline preload="metadata"></video>
+          </div>
+        `;
+      } else {
+        mediaHtml = `
+          <div class="post-media-container">
+            <img src="${esc(p.mediaUrl)}" loading="lazy" alt="Hostel moment">
+          </div>
+        `;
+      }
+    }
+
+    return `
+      <div class="post-card" id="post-${esc(p.id)}">
+        <div class="post-head">
+          <div class="post-author-box">
+            <div class="avatar" style="width:36px;height:36px;font-size:13px;">${initials(p.authorName)}</div>
+            <div>
+              <div class="post-author-name">${esc(p.authorName || 'Hostel Mate')}</div>
+              <div class="post-time">${timeAgo(p.createdAt)}</div>
+            </div>
+          </div>
+          ${canDelete ? `<button class="del-btn" onclick="deletePost('${esc(p.id)}')">🗑️</button>` : ''}
+        </div>
+
+        ${p.caption ? `<div class="post-caption">${esc(p.caption)}</div>` : ''}
+
+        ${mediaHtml}
+
+        <div class="post-footer">
+          <div class="post-actions-left">
+            <button class="like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLikePost('${esc(p.id)}')">
+              <span>${isLiked ? '❤️' : '🤍'}</span>
+              <span>${likesCount}</span>
+            </button>
+            <span class="badge category" style="cursor:pointer;" onclick="setCreatorFilter('${esc(p.authorName)}')">
+              👤 ${esc(p.authorName)}
+            </span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+window.setCreatorFilter = function(name) {
+  if (!name) return;
+  selectedCreatorFilter = name;
+  $("creatorFilterActiveText").textContent = `Creator: ${name}`;
+  renderCreatorFilterChips();
+  renderFeed();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+window.toggleLikePost = async function(postId) {
+  if (!currentUser || currentUser.isAnonymous) {
+    if (confirm("Please sign in with your email to like posts. Open sign in now?")) {
+      openAuthModal();
+    }
+    return;
+  }
+
+  const post = posts[postId];
+  if (!post) return;
+
+  const uid = currentUser.uid;
+  const isLiked = post.likes && post.likes[uid];
+
+  try {
+    if (db) {
+      if (isLiked) {
+        await remove(ref(db, `posts/${postId}/likes/${uid}`));
+      } else {
+        await set(ref(db, `posts/${postId}/likes/${uid}`), true);
+      }
+    } else {
+      if (!post.likes) post.likes = {};
+      if (isLiked) {
+        delete post.likes[uid];
+      } else {
+        post.likes[uid] = true;
+      }
+      saveLocalCache();
+      renderFeed();
+    }
+  } catch (err) {
+    alert("Like failed: " + err.message);
+  }
+};
+
+window.deletePost = async function(postId) {
+  if (!confirm("Are you sure you want to delete this video/post?")) return;
+
+  try {
+    if (db) {
+      await remove(ref(db, `posts/${postId}`));
+    } else {
+      delete posts[postId];
+      saveLocalCache();
+      renderFeed();
+    }
+  } catch (err) {
+    alert("Delete failed: " + err.message);
+  }
+};
+
+/* =========================================================
+   BILLING CYCLE CALCULATIONS
+========================================================= */
+function getCycleKeyFromTimestamp(ts) {
+  const d = new Date(ts || Date.now());
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function getCycleDisplay(cycleKey) {
+  if (cycleKey === "all") return "All Time";
+  if (cycleKey === "current") {
+    const d = new Date();
+    return d.toLocaleString("default", { month: "long", year: "numeric" });
+  }
+  const [y, m] = cycleKey.split("-");
+  const d = new Date(Number(y), Number(m) - 1, 1);
+  return d.toLocaleString("default", { month: "long", year: "numeric" });
+}
+
+function updateCycleOptions() {
+  const select = $("cycleSelect");
+  const currentVal = select.value;
+  const currentMonthKey = getCycleKeyFromTimestamp(Date.now());
+
+  const availableCycles = new Set();
+  availableCycles.add(currentMonthKey);
+
+  Object.values(expenses).forEach(e => {
+    if (e.createdAt) availableCycles.add(getCycleKeyFromTimestamp(e.createdAt));
+  });
+
+  const sorted = Array.from(availableCycles).sort().reverse();
+
+  let html = `<option value="current">Current Month (${getCycleDisplay("current")})</option>`;
+  html += `<option value="all">All Time Records</option>`;
+  sorted.forEach(key => {
+    if (key !== currentMonthKey) {
+      html += `<option value="${key}">${getCycleDisplay(key)}</option>`;
+    }
+  });
+
+  select.innerHTML = html;
+  if (Array.from(select.options).some(o => o.value === currentVal)) {
+    select.value = currentVal;
+  }
+}
+
+$("cycleSelect").addEventListener("change", e => {
+  activeCycle = e.target.value;
+  render();
+});
+
+function getFilteredExpenses() {
+  const list = Object.entries(expenses).map(([id, e]) => ({ id, ...e }))
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+  if (activeCycle === "all") return list;
+
+  const currentKey = getCycleKeyFromTimestamp(Date.now());
+  const targetKey = activeCycle === "current" ? currentKey : activeCycle;
+
+  return list.filter(e => getCycleKeyFromTimestamp(e.createdAt) === targetKey);
+}
+
+/* =========================================================
+   BALANCE & DEBT CALCULATION (MIN-CASH-FLOW)
+========================================================= */
+function calculateBalances() {
+  const balances = {};
+  members.forEach(m => balances[m] = 0);
+
+  const filtered = getFilteredExpenses();
+
+  filtered.forEach(e => {
+    const amount = Number(e.amount || 0);
+    const paidBy = e.paidBy;
+    const sharedBy = (e.sharedBy || []).filter(n => members.includes(n));
+
+    if (!sharedBy.length) return;
+
+    if (!(paidBy in balances)) balances[paidBy] = 0;
+    balances[paidBy] += amount;
+
+    if (e.splitType === "custom" && e.customShares) {
+      Object.entries(e.customShares).forEach(([name, share]) => {
+        if (members.includes(name)) {
+          balances[name] -= Number(share || 0);
+        }
+      });
+    } else {
+      const perPerson = amount / sharedBy.length;
+      sharedBy.forEach(name => {
+        balances[name] -= perPerson;
+      });
+    }
+  });
+
+  // Apply verified settlements
+  Object.values(settlements).forEach(rec => {
+    if (rec.status === "verified" && rec.from && rec.to && rec.amount) {
+      if (rec.from in balances) balances[rec.from] += Number(rec.amount);
+      if (rec.to in balances) balances[rec.to] -= Number(rec.amount);
+    }
+  });
+
+  return balances;
+}
+
+function calculateOptimizedSettlements(balances) {
+  const creditors = Object.entries(balances)
+    .filter(([, b]) => b > 0.5)
+    .map(([name, b]) => ({ name, b }))
+    .sort((a, b) => b.b - a.b);
+
+  const debtors = Object.entries(balances)
+    .filter(([, b]) => b < -0.5)
+    .map(([name, b]) => ({ name, b: -b }))
+    .sort((a, b) => b.b - a.b);
+
+  const result = [];
+  let i = 0, j = 0;
+
+  while (i < debtors.length && j < creditors.length) {
+    const amount = Math.min(debtors[i].b, creditors[j].b);
+    if (amount > 0.5) {
+      result.push({
+        from: debtors[i].name,
+        to: creditors[j].name,
+        amount: Math.round(amount)
+      });
+    }
+    debtors[i].b -= amount;
+    creditors[j].b -= amount;
+
+    if (debtors[i].b < 0.5) i++;
+    if (creditors[j].b < 0.5) j++;
+  }
+
+  return result;
+}
+
+/* =========================================================
+   ADMIN PIN MANAGEMENT
+========================================================= */
+const ADMIN_PIN = "1234";
+
+function updateAdminUI() {
+  const btn = $("adminStatusBtn");
+  const txt = $("adminStatusText");
+  const toggleBtn = $("adminToggleActionBtn");
+  const notice = $("adminCardNotice");
+
+  if (isAdmin) {
+    btn.classList.add("active");
+    txt.textContent = "Admin Active";
+    toggleBtn.textContent = "🔒 Exit Admin Mode";
+    notice.className = "msg success";
+    notice.textContent = "Admin Mode is Active. You have full management permissions.";
+  } else {
+    btn.classList.remove("active");
+    txt.textContent = "Admin";
+    toggleBtn.textContent = "🔑 Enter Admin PIN";
+    notice.className = "msg info";
+    notice.textContent = "Admin mode allows managing members, verifying payments, and deleting records.";
+  }
+}
+
+$("adminStatusBtn").addEventListener("click", () => {
+  if (isAdmin) {
+    isAdmin = false;
+    updateAdminUI();
+    render();
+  } else {
+    openAdminModal();
+  }
+});
+
+$("adminToggleActionBtn").addEventListener("click", () => {
+  if (isAdmin) {
+    isAdmin = false;
+    updateAdminUI();
+    render();
+  } else {
+    openAdminModal();
+  }
+});
+
+function openAdminModal() {
+  $("adminPinModal").classList.remove("hidden");
+  $("adminPinInput").value = "";
+  $("adminPinError").classList.add("hidden");
+  $("adminPinInput").focus();
+}
+
+$("adminPinCancelBtn").addEventListener("click", () => {
+  $("adminPinModal").classList.add("hidden");
+});
+
+$("adminPinSubmitBtn").addEventListener("click", () => {
+  const pin = $("adminPinInput").value.trim();
+  if (pin === ADMIN_PIN) {
+    isAdmin = true;
+    $("adminPinModal").classList.add("hidden");
+    updateAdminUI();
+    render();
+  } else {
+    $("adminPinError").textContent = "Invalid PIN. Default PIN is 1234.";
+    $("adminPinError").classList.remove("hidden");
+  }
+});
+
+$("adminPinInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") $("adminPinSubmitBtn").click();
+});
+
+/* =========================================================
+   ADD EXPENSE FORM LOGIC
+========================================================= */
+$("expenseMeal").addEventListener("change", e => {
+  const isCustom = e.target.value === "Custom";
+  $("customMealField").classList.toggle("hidden", !isCustom);
+});
+
+document.querySelectorAll(".amount-pill").forEach(pill => {
+  pill.addEventListener("click", () => {
+    const addVal = Number(pill.dataset.add);
+    const curr = Number($("expenseAmount").value || 0);
+    $("expenseAmount").value = curr + addVal;
+    updateSplitPreview();
+  });
+});
+
+$("expenseAmount").addEventListener("input", updateSplitPreview);
+$("expenseSplitMode").addEventListener("change", () => {
+  renderCustomSplitFields();
+  updateSplitPreview();
+});
+
+// Auto-select payer as participant
+$("expensePaidBy").addEventListener("change", () => {
+  const payer = $("expensePaidBy").value;
+  if (payer) {
+    const chip = document.querySelector(`.chip[data-member="${payer}"]`);
+    if (chip) {
+      const input = chip.querySelector("input");
+      if (input && !input.checked) {
+        input.checked = true;
+        chip.classList.add("active");
+      }
+    }
+  }
+  updateSplitPreview();
+});
+
+$("selectAllChipsBtn").addEventListener("click", () => {
+  const inputs = Array.from(document.querySelectorAll("#expenseMembersGrid input"));
+  const allChecked = inputs.length && inputs.every(i => i.checked);
+  inputs.forEach(i => {
+    i.checked = !allChecked;
+    i.closest(".chip").classList.toggle("active", !allChecked);
+  });
+  renderCustomSplitFields();
+  updateSplitPreview();
+});
+
+function getSelectedParticipants() {
+  return Array.from(document.querySelectorAll("#expenseMembersGrid input:checked"))
+    .map(i => i.value);
+}
+
+function renderMembersInForm() {
+  const grid = $("expenseMembersGrid");
+  const paidSelect = $("expensePaidBy");
+  const currentPaid = paidSelect.value;
+
+  paidSelect.innerHTML = '<option value="">Select Payer</option>' +
+    members.map(m => `<option value="${esc(m)}">${esc(m)}</option>`).join("");
+
+  if (members.includes(currentPaid)) paidSelect.value = currentPaid;
+
+  grid.innerHTML = members.map(m => `
+    <label class="chip" data-member="${esc(m)}">
+      <input type="checkbox" value="${esc(m)}">
+      <div class="chip-avatar">${initials(m)}</div>
+      <span>${esc(m)}</span>
+    </label>
+  `).join("");
+
+  grid.querySelectorAll("input").forEach(inp => {
+    inp.addEventListener("change", () => {
+      inp.closest(".chip").classList.toggle("active", inp.checked);
+      renderCustomSplitFields();
+      updateSplitPreview();
+    });
+  });
+
+  renderCustomSplitFields();
+  updateSplitPreview();
+}
+
+function renderCustomSplitFields() {
+  const mode = $("expenseSplitMode").value;
+  const container = $("customSplitContainer");
+  const list = $("customSplitList");
+
+  if (mode !== "custom") {
+    container.classList.add("hidden");
+    return;
+  }
+
+  container.classList.remove("hidden");
+  const selected = getSelectedParticipants();
+
+  if (!selected.length) {
+    list.innerHTML = '<div style="font-size:13px;color:var(--text-muted);padding:8px 0;">Select members above to allocate custom shares.</div>';
+    return;
+  }
+
+  const totalAmount = Number($("expenseAmount").value || 0);
+  const equalShare = selected.length ? Math.round(totalAmount / selected.length) : 0;
+
+  list.innerHTML = selected.map(name => {
+    const val = customSplitValues[name] !== undefined ? customSplitValues[name] : equalShare;
+    return `
+      <div class="custom-split-item">
+        <span style="font-weight:700;">${esc(name)}</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:13px;color:var(--text-muted);">Rs</span>
+          <input type="number" step="any" data-name="${esc(name)}" value="${val}" class="custom-share-input">
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  list.querySelectorAll(".custom-share-input").forEach(inp => {
+    inp.addEventListener("input", e => {
+      customSplitValues[e.target.dataset.name] = Number(e.target.value || 0);
+      updateSplitPreview();
+    });
+  });
+}
+
+function updateSplitPreview() {
+  const amount = Number($("expenseAmount").value || 0);
+  const selected = getSelectedParticipants();
+  const mode = $("expenseSplitMode").value;
+  const preview = $("splitPreviewBox");
+
+  if (!amount || amount <= 0) {
+    preview.innerHTML = "Enter an amount to calculate split.";
+    return;
+  }
+
+  if (!selected.length) {
+    preview.innerHTML = "Select at least 1 member who participated.";
+    return;
+  }
+
+  if (mode === "equal") {
+    const perPerson = Math.round(amount / selected.length);
+    preview.innerHTML = `<b>${money(amount)}</b> split equally among <b>${selected.length} members</b>: <b>${money(perPerson)} / person</b>.`;
+  } else {
+    let customSum = 0;
+    selected.forEach(m => {
+      const share = customSplitValues[m] !== undefined ? customSplitValues[m] : Math.round(amount / selected.length);
+      customSum += Number(share || 0);
+    });
+
+    const diff = amount - customSum;
+    if (Math.abs(diff) < 0.5) {
+      preview.innerHTML = `✅ Custom shares add up exactly to <b>${money(amount)}</b>.`;
+    } else if (diff > 0) {
+      preview.innerHTML = `⚠️ Remaining unallocated: <b style="color:var(--amber);">${money(diff)}</b>.`;
+    } else {
+      preview.innerHTML = `⚠️ Custom shares exceed total by <b style="color:var(--red);">${money(-diff)}</b>.`;
+    }
+  }
+}
+
+$("saveExpenseBtn").addEventListener("click", async () => {
+  const errBox = $("expenseError");
+  const succBox = $("expenseSuccess");
+  errBox.classList.add("hidden");
+  succBox.classList.add("hidden");
+
+  if (!members.length) {
+    errBox.textContent = "Please add hostel members in Settings first.";
+    errBox.classList.remove("hidden");
+    return;
+  }
+
+  const amount = Number($("expenseAmount").value || 0);
+  const paidBy = $("expensePaidBy").value;
+  const selected = getSelectedParticipants();
+  const mealType = $("expenseMeal").value;
+  const mealName = mealType === "Custom" ? $("expenseCustomMeal").value.trim() : mealType;
+  const location = $("expenseLocation").value.trim();
+  const splitType = $("expenseSplitMode").value;
+
+  if (!amount || amount <= 0) {
+    errBox.textContent = "Please enter a valid amount.";
+    errBox.classList.remove("hidden");
+    return;
+  }
+
+  if (!paidBy) {
+    errBox.textContent = "Please select who paid.";
+    errBox.classList.remove("hidden");
+    return;
+  }
+
+  if (!selected.length) {
+    errBox.textContent = "Please select who participated / ate.";
+    errBox.classList.remove("hidden");
+    return;
+  }
+
+  let customShares = {};
+  if (splitType === "custom") {
+    let sum = 0;
+    selected.forEach(m => {
+      const val = Number(customSplitValues[m] || 0);
+      customShares[m] = val;
+      sum += val;
+    });
+
+    if (Math.abs(sum - amount) > 1) {
+      errBox.textContent = `Custom shares sum (Rs ${sum}) does not equal total bill (${money(amount)}).`;
+      errBox.classList.remove("hidden");
+      return;
+    }
+  }
+
+  const newExpense = {
+    amount,
+    paidBy,
+    sharedBy: selected,
+    meal: mealName || "Meal",
+    location: location || "",
+    splitType,
+    customShares,
+    createdAt: Date.now(),
+    createdBy: currentUser?.uid || "guest"
+  };
+
+  try {
+    if (db) {
+      await push(ref(db, "expenses"), newExpense);
+    } else {
+      const fakeId = "exp_" + Date.now();
+      expenses[fakeId] = newExpense;
+      saveLocalCache();
+      render();
+    }
+
+    succBox.textContent = "Expense saved successfully!";
+    succBox.classList.remove("hidden");
+
+    // Reset Form
+    $("expenseAmount").value = "";
+    $("expenseLocation").value = "";
+    $("expenseCustomMeal").value = "";
+    customSplitValues = {};
+    document.querySelectorAll("#expenseMembersGrid input").forEach(i => {
+      i.checked = false;
+      i.closest(".chip").classList.remove("active");
+    });
+    updateSplitPreview();
+
+    setTimeout(() => {
+      succBox.classList.add("hidden");
+      switchTab("tab-dashboard");
+    }, 1200);
+
+  } catch (err) {
+    errBox.textContent = "Could not save expense: " + err.message;
+    errBox.classList.remove("hidden");
+  }
+});
+
+/* =========================================================
+   SETTLEMENT WORKFLOW
+========================================================= */
+function settlementKey(from, to, amount) {
+  const safeFrom = encodeURIComponent(String(from || "").trim());
+  const safeTo = encodeURIComponent(String(to || "").trim());
+  const safeAmount = String(Number(amount || 0)).replace(/\./g, "-");
+  return `${safeFrom}__${safeTo}__${safeAmount}`;
+}
+
+window.openSettleModal = function(from, to, amount) {
+  pendingSettleTarget = { from, to, amount };
+  const key = settlementKey(from, to, amount);
+  const existing = settlements[key];
+
+  $("settleModalTitle").textContent = `Settle: ${from} ➔ ${to}`;
+  $("settleModalDetails").innerHTML = `<b>${from}</b> will pay <b>${money(amount)}</b> to <b>${to}</b>.`;
+  $("settlePaymentMethod").value = existing?.paymentMethod || "EasyPaisa";
+  $("settleNoteInput").value = existing?.paymentNote || "";
+  $("settleError").classList.add("hidden");
+
+  if (isAdmin || existing?.status === "requested") {
+    $("settleConfirmVerifiedBtn").classList.remove("hidden");
+  } else {
+    $("settleConfirmVerifiedBtn").classList.add("hidden");
+  }
+
+  $("settleModal").classList.remove("hidden");
+};
+
+$("settleCancelBtn").addEventListener("click", () => {
+  $("settleModal").classList.add("hidden");
+});
+
+$("settleSendProofBtn").addEventListener("click", async () => {
+  if (!pendingSettleTarget) return;
+  const { from, to, amount } = pendingSettleTarget;
+  const method = $("settlePaymentMethod").value;
+  const note = $("settleNoteInput").value.trim();
+  const key = settlementKey(from, to, amount);
+
+  const record = {
+    from,
+    to,
+    amount,
+    paymentMethod: method,
+    paymentNote: note,
+    status: "requested",
+    requestedAt: Date.now()
+  };
+
+  try {
+    if (db) {
+      await set(ref(db, `settlements/${key}`), record);
+    } else {
+      settlements[key] = record;
+      saveLocalCache();
+      render();
+    }
+    $("settleModal").classList.add("hidden");
+  } catch (err) {
+    $("settleError").textContent = err.message;
+    $("settleError").classList.remove("hidden");
+  }
+});
+
+$("settleConfirmVerifiedBtn").addEventListener("click", async () => {
+  if (!pendingSettleTarget) return;
+  const { from, to, amount } = pendingSettleTarget;
+  const method = $("settlePaymentMethod").value;
+  const note = $("settleNoteInput").value.trim();
+  const key = settlementKey(from, to, amount);
+
+  const record = {
+    from,
+    to,
+    amount,
+    paymentMethod: method,
+    paymentNote: note,
+    status: "verified",
+    verifiedAt: Date.now()
+  };
+
+  try {
+    if (db) {
+      await set(ref(db, `settlements/${key}`), record);
+    } else {
+      settlements[key] = record;
+      saveLocalCache();
+      render();
+    }
+    $("settleModal").classList.add("hidden");
+  } catch (err) {
+    $("settleError").textContent = err.message;
+    $("settleError").classList.remove("hidden");
+  }
+});
+
+/* =========================================================
+   MEMBER MANAGEMENT
+========================================================= */
+$("addMemberBtn").addEventListener("click", addMember);
+$("newMemberInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") addMember();
+});
+
+async function addMember() {
+  const name = $("newMemberInput").value.trim();
+  if (!name) return;
+
+  if (members.includes(name)) {
+    alert("Member with this name already exists.");
+    return;
+  }
+
+  const updated = [...members, name];
+  try {
+    if (db) {
+      await set(ref(db, "roommates"), updated);
+    } else {
+      members = updated;
+      saveLocalCache();
+      render();
+    }
+    $("newMemberInput").value = "";
+  } catch (err) {
+    alert("Could not add member: " + err.message);
+  }
+}
+
+window.deleteMember = async function(name) {
+  if (!isAdmin) {
+    alert("Admin permission required to remove members.");
+    return;
+  }
+
+  const isUsed = Object.values(expenses).some(e =>
+    e.paidBy === name || (e.sharedBy || []).includes(name)
+  );
+
+  if (isUsed) {
+    alert(`Cannot remove "${name}" because they are part of existing expense records. Delete those expenses first.`);
+    return;
+  }
+
+  if (!confirm(`Remove "${name}" from hostel members?`)) return;
+
+  const updated = members.filter(m => m !== name);
+  try {
+    if (db) {
+      await set(ref(db, "roommates"), updated);
+    } else {
+      members = updated;
+      saveLocalCache();
+      render();
+    }
+  } catch (err) {
+    alert("Could not remove member: " + err.message);
+  }
+};
+
+/* =========================================================
+   DELETE EXPENSE & CLEAR ALL
+========================================================= */
+window.deleteExpense = async function(id) {
+  if (!isAdmin) {
+    alert("Admin permission required to delete expenses.");
+    return;
+  }
+
+  if (!confirm("Are you sure you want to delete this expense?")) return;
+
+  try {
+    if (db) {
+      await remove(ref(db, `expenses/${id}`));
+    } else {
+      delete expenses[id];
+      saveLocalCache();
+      render();
+    }
+  } catch (err) {
+    alert("Delete failed: " + err.message);
+  }
+};
+
+$("clearAllBtn").addEventListener("click", async () => {
+  if (!isAdmin) {
+    alert("Only an admin can clear expenses. Enter Admin PIN first.");
+    return;
+  }
+
+  if (!confirm("WARNING: This will permanently delete ALL expense and settlement records. Are you sure?")) return;
+  if (!confirm("Double check: Do you really want to reset everything?")) return;
+
+  try {
+    if (db) {
+      await remove(ref(db, "expenses"));
+      await remove(ref(db, "settlements"));
+    } else {
+      expenses = {};
+      settlements = {};
+      saveLocalCache();
+      render();
+    }
+    alert("All expenses cleared.");
+  } catch (err) {
+    alert("Clear failed: " + err.message);
+  }
+});
+
+/* =========================================================
+   WHATSAPP SUMMARY GENERATOR
+========================================================= */
+function generateWhatsAppSummary() {
+  const filtered = getFilteredExpenses();
+  const total = filtered.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+  const cycleTitle = getCycleDisplay(activeCycle);
+  const balances = calculateBalances();
+  const optSettlements = calculateOptimizedSettlements(balances);
+
+  let text = `🏠 *Hostel Expense Summary (${cycleTitle})*\n`;
+  text += `💰 *Total Mess Spent:* ${money(total)}\n`;
+  text += `📝 *Entries Count:* ${filtered.length}\n\n`;
+
+  text += `👥 *Roommate Net Balances:*\n`;
+  members.forEach(m => {
+    const b = Math.round(balances[m] || 0);
+    if (b > 0) {
+      text += `🟢 *${m}:* +${money(b)} (To Receive)\n`;
+    } else if (b < 0) {
+      text += `🔴 *${m}:* -${money(-b)} (Owes)\n`;
+    } else {
+      text += `⚪ *${m}:* Settled (Rs 0)\n`;
+    }
+  });
+
+  text += `\n🤝 *Simplified Settle-Up Plan:*\n`;
+  if (!optSettlements.length) {
+    text += `✨ All expenses are fully settled!\n`;
+  } else {
+    optSettlements.forEach((s, i) => {
+      text += `${i + 1}. *${s.from}* ➔ *${s.to}*: ${money(s.amount)}\n`;
+    });
+  }
+
+  text += `\n_Generated with Hostel Expense Tracker_`;
+  return text;
+}
+
+function openWhatsAppModal() {
+  const text = generateWhatsAppSummary();
+  $("whatsappTextPreview").value = text;
+  $("whatsappModal").classList.remove("hidden");
+}
+
+$("quickWhatsAppBtn").addEventListener("click", openWhatsAppModal);
+$("dashWhatsAppBtn").addEventListener("click", openWhatsAppModal);
+$("settingsWhatsAppBtn").addEventListener("click", openWhatsAppModal);
+$("whatsappCloseBtn").addEventListener("click", () => $("whatsappModal").classList.add("hidden"));
+
+$("whatsappCopyBtn").addEventListener("click", () => {
+  navigator.clipboard.writeText($("whatsappTextPreview").value);
+  alert("WhatsApp summary copied to clipboard!");
+});
+
+$("whatsappOpenBtn").addEventListener("click", () => {
+  const text = encodeURIComponent($("whatsappTextPreview").value);
+  window.open(`https://api.whatsapp.com/send?text=${text}`, "_blank");
+});
+
+/* =========================================================
+   CSV EXPORT
+========================================================= */
+function exportCSV() {
+  const filtered = getFilteredExpenses();
+  const rows = [["Date", "Time", "Category/Meal", "Location/Details", "Amount (Rs)", "Paid By", "Shared By", "Split Mode"]];
+
+  filtered.forEach(e => {
+    const d = new Date(e.createdAt || Date.now());
+    rows.push([
+      d.toLocaleDateString(),
+      d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      `"${(e.meal || '').replace(/"/g, '""')}"`,
+      `"${(e.location || '').replace(/"/g, '""')}"`,
+      e.amount || 0,
+      `"${(e.paidBy || '').replace(/"/g, '""')}"`,
+      `"${(e.sharedBy || []).join('; ')}"`,
+      e.splitType || "equal"
+    ]);
+  });
+
+  const csv = "data:text/csv;charset=utf-8," + rows.map(r => r.join(",")).join("\n");
+  const encoded = encodeURI(csv);
+  const link = document.createElement("a");
+  link.setAttribute("href", encoded);
+  link.setAttribute("download", `hostel_expenses_${activeCycle}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+$("historyExportCSVBtn").addEventListener("click", exportCSV);
+$("settingsCSVBtn").addEventListener("click", exportCSV);
+
+/* =========================================================
+   HISTORY SEARCH & FILTER
+========================================================= */
+$("historySearch").addEventListener("input", renderHistory);
+$("historyCategoryFilter").addEventListener("change", renderHistory);
+
+function renderHistory() {
+  const container = $("historyList");
+  const filtered = getFilteredExpenses();
+  const search = $("historySearch").value.toLowerCase().trim();
+  const cat = $("historyCategoryFilter").value;
+
+  const matches = filtered.filter(e => {
+    if (cat !== "all" && e.meal !== cat) return false;
+    if (search) {
+      const text = `${e.meal} ${e.location} ${e.paidBy} ${(e.sharedBy || []).join(" ")}`.toLowerCase();
+      if (!text.includes(search)) return false;
+    }
+    return true;
+  });
+
+  if (!matches.length) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🧾</div>
+        No matching expenses found.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = matches.map(e => {
+    const d = new Date(e.createdAt || Date.now());
+    const dateStr = d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+    const timeStr = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+    return `
+      <div class="history-item">
+        <div class="history-item-left">
+          <div class="history-item-title">
+            <span class="badge category">${esc(e.meal || 'Meal')}</span>
+            <span>${esc(e.location || 'Mess Expense')}</span>
+          </div>
+          <div class="history-item-sub">
+            Paid by <b>${esc(e.paidBy)}</b> • Shared with ${esc((e.sharedBy || []).join(", "))}
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);">
+            ${dateStr} at ${timeStr}
+          </div>
+        </div>
+        <div class="history-item-right">
+          <div class="history-amount">${money(e.amount)}</div>
+          ${isAdmin ? `<button class="del-btn" onclick="deleteExpense('${e.id}')">🗑️ Delete</button>` : ''}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* =========================================================
+   MAIN RENDER FUNCTION
+========================================================= */
+function render() {
+  updateCycleOptions();
+  const filtered = getFilteredExpenses();
+  const totalSpent = filtered.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+  const balances = calculateBalances();
+  const optSettlements = calculateOptimizedSettlements(balances);
+
+  // Dashboard Stats
+  $("dashTotalSpent").textContent = money(totalSpent);
+  $("dashTotalCount").textContent = filtered.length;
+  $("dashMemberCount").textContent = members.length;
+  $("dashSettlementsCount").textContent = optSettlements.length;
+
+  // Render Form Member Chips
+  renderMembersInForm();
+
+  // Render Balances (Dashboard & Balances tab)
+  renderBalancesUI(balances);
+
+  // Render Settlements (Dashboard & Balances tab)
+  renderSettlementsUI(optSettlements);
+
+  // Render Settlement Records (History of proofs)
+  renderSettlementRecordsUI();
+
+  // Render History List
+  renderHistory();
+
+  // Render Members in Settings
+  renderMembersManagementUI();
+
+  // Render Entertainment / Feed
+  renderCreatorFilterChips();
+  renderFeed();
+
+  // Update Auth & Admin UI
+  updateAuthUI();
+  updateAdminUI();
+}
+
+function renderBalancesUI(balances) {
+  const dashBox = $("dashBalancesList");
+  const fullBox = $("balancesContainer");
+
+  if (!members.length) {
+    const empty = '<div class="empty-state"><div class="empty-icon">👥</div>Add hostel members in Settings to begin.</div>';
+    dashBox.innerHTML = empty;
+    fullBox.innerHTML = empty;
+    return;
+  }
+
+  const html = members.map(m => {
+    const bal = Math.round(balances[m] || 0);
+    const cls = bal > 0 ? "pos" : (bal < 0 ? "neg" : "zero");
+    const label = bal > 0 ? `+${money(bal)} (Gets)` : (bal < 0 ? `-${money(-bal)} (Owes)` : "Settled");
+
+    return `
+      <div class="person-row">
+        <div class="person-left">
+          <div class="avatar">${initials(m)}</div>
+          <div>
+            <div class="name">${esc(m)}</div>
+            <div class="sub">${bal >= 0 ? 'Creditor' : 'Debtor'}</div>
+          </div>
+        </div>
+        <div class="balance ${cls}">${label}</div>
+      </div>
+    `;
+  }).join("");
+
+  dashBox.innerHTML = html;
+  fullBox.innerHTML = html;
+}
+
+function renderSettlementsUI(optSettlements) {
+  const dashBox = $("dashSettlementsList");
+  const fullBox = $("settlementsContainer");
+
+  if (!optSettlements.length) {
+    const empty = '<div class="empty-state"><div class="empty-icon">🤝</div>All balances are even! No settlements required.</div>';
+    dashBox.innerHTML = empty;
+    fullBox.innerHTML = empty;
+    return;
+  }
+
+  const html = optSettlements.map(s => {
+    const key = settlementKey(s.from, s.to, s.amount);
+    const existing = settlements[key];
+    const isPending = existing?.status === "requested";
+
+    return `
+      <div class="settle-card">
+        <div class="settle-top">
+          <span>${esc(s.from)} ➔ ${esc(s.to)}</span>
+          <span style="color:var(--accent);font-size:16px;">${money(s.amount)}</span>
+        </div>
+        <div class="settle-bottom">
+          <div>
+            ${isPending ? '<span class="badge pending">⏳ Payment Proof Sent</span>' : '<span class="badge" style="background:var(--input-bg);color:var(--text-muted);">Unsettled</span>'}
+          </div>
+          <button class="btn secondary small-btn" onclick="openSettleModal('${esc(s.from)}', '${esc(s.to)}', ${s.amount})">
+            ${isPending ? '🔍 View / Verify' : '💸 Settle Up'}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  dashBox.innerHTML = html;
+  fullBox.innerHTML = html;
+}
+
+function renderSettlementRecordsUI() {
+  const box = $("settlementRecordsContainer");
+  const recs = Object.values(settlements).sort((a, b) => (b.requestedAt || 0) - (a.requestedAt || 0));
+
+  if (!recs.length) {
+    box.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div>No payment records yet.</div>';
+    return;
+  }
+
+  box.innerHTML = recs.map(r => {
+    const isVerified = r.status === "verified";
+    return `
+      <div class="history-item">
+        <div class="history-item-left">
+          <div style="font-weight:700;font-size:14px;">
+            ${esc(r.from)} paid ${esc(r.to)}: ${money(r.amount)}
+          </div>
+          <div class="history-item-sub">
+            Via <b>${esc(r.paymentMethod || 'Cash')}</b> • Note: "${esc(r.paymentNote || 'No notes')}"
+          </div>
+        </div>
+        <div>
+          <span class="badge ${isVerified ? 'verified' : 'pending'}">
+            ${isVerified ? '✅ Verified' : '⏳ Pending'}
+          </span>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderMembersManagementUI() {
+  const box = $("membersManagementList");
+  if (!members.length) {
+    box.innerHTML = '<div class="empty-state"><div class="empty-icon">👥</div>No members added yet.</div>';
+    return;
+  }
+
+  box.innerHTML = members.map(m => `
+    <div class="person-row">
+      <div class="person-left">
+        <div class="avatar">${initials(m)}</div>
+        <div class="name">${esc(m)}</div>
+      </div>
+      <div>
+        ${isAdmin ? `<button class="del-btn" onclick="deleteMember('${esc(m)}')">🗑️ Remove</button>` : ''}
+      </div>
+    </div>
+  `).join("");
+}
+
+/* =========================================================
+   FIREBASE CONNECTIVITY & STARTUP
+========================================================= */
+async function startApp() {
+  loadLocalCache();
+  render();
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    db = getDatabase(app);
+    auth = getAuth(app);
+    
+    try {
+      storage = getStorage(app);
+    } catch (e) {
+      console.warn("Firebase storage init:", e);
+    }
+
+    // Listen to Auth State
+    onAuthStateChanged(auth, async user => {
+      currentUser = user;
+      if (!user) {
+        try {
+          await signInAnonymously(auth);
+        } catch (e) {
+          console.warn("Anonymous auth info:", e);
+        }
+      }
+      $("connectionStatus").textContent = "Live Synced";
+      $("headerStatusDot").className = "status-dot";
+      updateAuthUI();
+      renderFeed();
+    });
+
+    // Listen to Roommates / Members
+    onValue(ref(db, "roommates"), snap => {
+      const val = snap.val();
+      members = Array.isArray(val) ? val : [];
+      saveLocalCache();
+      render();
+    });
+
+    // Listen to Expenses
+    onValue(ref(db, "expenses"), snap => {
+      expenses = snap.val() || {};
+      saveLocalCache();
+      render();
+    });
+
+    // Listen to Settlements
+    onValue(ref(db, "settlements"), snap => {
+      settlements = snap.val() || {};
+      saveLocalCache();
+      render();
+    });
+
+    // Listen to Posts / Reels
+    onValue(ref(db, "posts"), snap => {
+      posts = snap.val() || {};
+      saveLocalCache();
+      renderCreatorFilterChips();
+      renderFeed();
+    });
+
+  } catch (err) {
+    console.warn("Firebase offline or fallback active:", err);
+    $("connectionStatus").textContent = "Offline Mode";
+    $("headerStatusDot").className = "status-dot offline";
+  }
+}
+
+// Start Application
+startApp();
+</script>
+</body>
+</html>

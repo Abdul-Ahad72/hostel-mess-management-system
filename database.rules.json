@@ -1,0 +1,42 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": false,
+    "admins": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "roommates": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "members": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "expenses": {
+      ".read": "auth != null",
+      "$expenseId": {
+        ".write": "auth != null"
+      }
+    },
+    "settlements": {
+      ".read": "auth != null",
+      "$settlementId": {
+        ".write": "auth != null"
+      }
+    },
+    "posts": {
+      ".read": "auth != null",
+      "$postId": {
+        ".write": "auth != null"
+      }
+    },
+    "users": {
+      ".read": "auth != null",
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    }
+  }
+}
